@@ -7,59 +7,42 @@
 
 import SwiftUI
 
+enum CurrentLight {
+    case red, yellow, green
+}
+
 struct ContentView: View {
+    @State private var buttonTitle = "START"
+    
     @State private var redOpacity = 0.3
     @State private var yellowOpacity = 0.3
     @State private var greenOpacity = 0.3
     @State private var currentLight = CurrentLight.red
-    @State private var lightIsOn = 1.0
-    @State private var lightIsOff = 0.3
-    @State private var isFirstTap = true
+
     
     var body: some View {
         ZStack {
             Color.black.edgesIgnoringSafeArea(.all)
-            VStack {
-                Circle()
-                    .frame(width: 130, height: 130)
-                    .foregroundStyle(.red)
-                    .overlay(Circle().stroke(Color.white, lineWidth: 6))
-                    .opacity(redOpacity)
-                Circle()
-                    .frame(width: 130, height: 130)
-                    .foregroundStyle(.orange)
-                    .overlay(Circle().stroke(Color.white, lineWidth: 6))
-                    .opacity(yellowOpacity)
-                Circle()
-                    .frame(width: 130, height: 130)
-                    .foregroundStyle(.green)
-                    .overlay(Circle().stroke(Color.white, lineWidth: 6))
-                    .opacity(greenOpacity)
+            
+            VStack (spacing: 20) {
+                ColorCircleView(color: .red, opacity: redOpacity)
+                ColorCircleView(color: .yellow, opacity: yellowOpacity)
+                ColorCircleView(color: .green, opacity: greenOpacity)
                 Spacer()
-                Button(action: {
+                
+                StartButtonView(title: buttonTitle) {
+                    if buttonTitle == "START" {
+                        buttonTitle = "NEXT"
+                    }
                     changeLight()
-                }) {
-                    Text(isFirstTap ? "START" : "NEXT")
-                        .font(.title)
-                        .foregroundColor(.white)
-                        .frame(width: 160, height: 55)
-                        .background(Color.blue)
-                        .cornerRadius(10)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 10)
-                                .stroke(Color.white, lineWidth: 6)
-                        )
                 }
-                .padding(.bottom, 20)
+                .padding()
             }
-            .padding(.top, 20)
         }
     }
-    
     private func changeLight() {
-        if isFirstTap {
-            isFirstTap = false
-        }
+        let lightIsOn = 1.0
+        let lightIsOff = 0.3
         
         switch currentLight {
             case .red:
@@ -78,9 +61,6 @@ struct ContentView: View {
     }
 }
 
-enum CurrentLight {
-    case red, yellow, green
-}
 #Preview {
     ContentView()
 }
